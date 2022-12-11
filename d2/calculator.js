@@ -26,21 +26,17 @@ const mappingPlayer1 = {A: 0, B: 1, C: 2};
 const mappingPlayer2GeneralScore = {X: 1, Y: 2, Z: 3};
 
 
-const scores = [[3, 6, 0], [0, 3, 6], [6, 0, 3]];
-
+// Encode each solution (victory vs loss) + chosen play
+const fixedScores = [[0, 3, 6], [0, 3, 6], [0, 3, 6]];
+const scores = [[3, 1, 2], [1, 2, 3], [2, 3, 1]];
 // Second column can be used to store part of the score
 let i = 0;
 
 function compareOptions(player1, player2){
-    console.log(player2, player1, player2,i)
     const mappedPlayer1 = mappingPlayer1[player1];
     const mappedPlayer2 = mappingPlayer2[player2];
-
-    const generalScorePlayer2 = mappingPlayer2GeneralScore[player2];
-    i++;
     
-    
-    return (scores[mappedPlayer1][mappedPlayer2] + generalScorePlayer2);    
+    return (scores[mappedPlayer1][mappedPlayer2] + fixedScores[mappedPlayer1][mappedPlayer2]);    
 }
 
 let output = textContent.map(text => 

@@ -1,7 +1,4 @@
 
-let resultObj = document.getElementById("result");
-resultObj.innerText = "aaa";
-
 // We need to wait for the result of the fetch call, otherwise we cannot store the content in a variable (loading time is slower, so we get to textContent too quickly).
 // Consequently, wrap everything in an async function and then wait for the promises to finish. Then, return the variable.
 
@@ -41,4 +38,18 @@ for (const i of textContent){
     
 }
 
-resultObj.innerText = outputs.reduce((x,y) => Math.max(x,y));
+function compareNumbers(a, b) {
+    return b-a;
+  }
+  
+
+
+
+const outputSorted = outputs.sort(compareNumbers);
+document.getElementById("result1").innerText =  outputSorted[0];
+document.getElementById("result2").innerText =  outputSorted[1];
+document.getElementById("result3").innerText =  outputSorted[2];
+
+document.getElementById("Total").innerText = outputSorted[0] + outputSorted[1] + outputSorted[2];
+
+

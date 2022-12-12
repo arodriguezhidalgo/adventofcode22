@@ -46,10 +46,10 @@ function verifySubset(x){
     // Check whether all the items in array1 are contained in array2. Sum the trues, and if the number is the same as the length of array2, then we accept that it contains array1.
     // The first map is multiplied by 1 so we accumulate 1s instead of logical trues. Otherwise, cases like "2-2, 2-2" fail.
     const array2ContainsArray1 = x.array1.map(v => x.array2.includes(v)*1)
-    .reduce((a,b) => a+b) === Math.min(x.array2.length, x.array1.length);
+    .reduce((a,b) => a+b) > 0;
     
     const array1ContainsArray2 = x.array2.map(v => x.array1.includes(v)*1)
-    .reduce((a,b) => a+b) === Math.min(x.array2.length, x.array1.length);
+    .reduce((a,b) => a+b) > 0;
 
     console.log(x.str, array1ContainsArray2 || array2ContainsArray1)
 

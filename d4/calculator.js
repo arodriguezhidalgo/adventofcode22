@@ -9,9 +9,9 @@ async function getTextContent(){
     Then, split using \n.
     THen, assign the output to `textContent.*/
     await fetch('input')
-        .then(response => response.text())
-        .then((text) => text.split("\n"))        
-        .then((text) => textContent = text);    
+    .then(response => response.text())
+    .then((text) => text.split("\n"))        
+    .then((text) => textContent = text);    
 }
 
 let textContent;
@@ -19,33 +19,45 @@ let textContent;
 // Retrieve the text content
 await getTextContent();
 
-//let splitText = textContent.map(text => text.split(" "));
+const output = textContent.map(x => x.split(","))
+.map(x => extractVectors(x))
+.map(x => verifySubset(x))
+.reduce((x,y) => x+y)
 
-const mappingPlayer2 = {X: 0, Y: 1, Z: 2};
-const mappingPlayer1 = {A: 0, B: 1, C: 2};
-const mappingPlayer2GeneralScore = {X: 1, Y: 2, Z: 3};
+debugger
 
-
-// Encode each solution (victory vs loss) + chosen play
-const fixedScores = [[0, 3, 6], [0, 3, 6], [0, 3, 6]];
-const scores = [[3, 1, 2], [1, 2, 3], [2, 3, 1]];
-// Second column can be used to store part of the score
-let i = 0;
-
-function compareOptions(player1, player2){
-    const mappedPlayer1 = mappingPlayer1[player1];
-    const mappedPlayer2 = mappingPlayer2[player2];
+function extractVectors(sequences){
+    // Sequences contains two sequences. E.g. ["2-4","5-6"]
+    // Split sequences 2-4 into [2,4]
+    let seq1 = sequences[0].split("-").map(x => parseInt(x));
+    let seq2 = sequences[1].split("-").map(x => parseInt(x));
     
-    return (scores[mappedPlayer1][mappedPlayer2] + fixedScores[mappedPlayer1][mappedPlayer2]);    
+    // Generate a vector from the sequence to have a specific length using Array. Then, use map to return its indices (see i inside of the map call). Finally, add the value of the origin of seq1    
+    let array1 = [... new Array(seq1[1] - seq1[0]+1)].map((x,i) => i).map(x => x+seq1[0]);
+    let array2 = [... new Array(seq2[1] - seq2[0]+1)].map((x,i) => i).map(x => x+seq2[0]);
+    
+    return {array1: array1, array2: array2, str: sequences};
 }
 
-let output = textContent.map(text => 
-    {
-        const playerChoices = text.split(" ");
-        const player1 = playerChoices[0];
-        const player2 = playerChoices[1];
-        return compareOptions(player1, player2);
-    })
-    .reduce((a,b) => a+b);
+
+
+function verifySubset(x){
+    
+    // Check whether all the items in array1 are contained in array2. Sum the trues, and if the number is the same as the length of array2, then we accept that it contains array1.
+    // The first map is multiplied by 1 so we accumulate 1s instead of logical trues. Otherwise, cases like "2-2, 2-2" fail.
+    const array2ContainsArray1 = x.array1.map(v => x.array2.includes(v)*1)
+    .reduce((a,b) => a+b) === Math.min(x.array2.length, x.array1.length);
+    
+    const array1ContainsArray2 = x.array2.map(v => x.array1.includes(v)*1)
+    .reduce((a,b) => a+b) === Math.min(x.array2.length, x.array1.length);
+
+    console.log(x.str, array1ContainsArray2 || array2ContainsArray1)
+
+    return array1ContainsArray2 || array2ContainsArray1;
+}
+
+
 
 document.getElementById("Total").innerText = output;
+// 539 is too low.
+//

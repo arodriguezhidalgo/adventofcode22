@@ -24,7 +24,7 @@ const output = textContent.map(x => x.split(","))
 .map(x => verifySubset(x))
 .reduce((x,y) => x+y)
 
-debugger
+
 
 function extractVectors(sequences){
     // Sequences contains two sequences. E.g. ["2-4","5-6"]
@@ -38,8 +38,6 @@ function extractVectors(sequences){
     
     return {array1: array1, array2: array2, str: sequences};
 }
-
-
 
 function verifySubset(x){
     
@@ -59,5 +57,3 @@ function verifySubset(x){
 
 
 document.getElementById("Total").innerText = output;
-// 539 is too low.
-//
